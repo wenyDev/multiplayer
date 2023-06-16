@@ -16,26 +16,27 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 })
 
-const players = {}
+const backEndPlayers = {}
 
 // new user connected
 io.on('connection', (socket) => {
   console.log('a user connected')
-  players[socket.id] ={
+  backEndPlayers[socket.id] ={
     x: 500 * Math.random(),
-    y: 500 * Math.random()
+    y: 500 * Math.random(),
+    color: `hsl(${360 * Math.random()}, 100%, 50%)`
   }
   // broadcasting to front end we have a new user
-  io.emit('updatePlayers', players)
+  io.emit('updatePlayers', backEndPlayers)
   
   // when the usder disconnected
   socket.on('disconnect', (reason) => {
-    delete players[socket.id]
-    io.emit('updatePlayers', players)
+    delete backEndPlayers[socket.id]
+    io.emit('updatePlayers', backEndPlayers)
   })
 })
 
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-console.log('server')
+
